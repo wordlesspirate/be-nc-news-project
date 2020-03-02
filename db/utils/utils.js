@@ -5,6 +5,15 @@ exports.formatDates = list => {
   return convertedDate;
 };
 
-exports.makeRefObj = list => {};
+exports.makeRefObj = list => {
+  const referenceObject = list.reduce(
+    (referenceElements, { title, article_id }) => {
+      referenceElements[title] = article_id;
+      return referenceElements;
+    },
+    {}
+  );
+  return referenceObject;
+};
 
 exports.formatComments = (comments, articleRef) => {};
