@@ -122,4 +122,78 @@ describe("makeRefObj()", () => {
   });
 });
 
-describe("formatComments", () => {});
+describe("formatComments", () => {
+  it("If no input is provided, returns an empty array.", () => {
+    const input = [];
+    const articleReference = {};
+    const output = [];
+    expect(formatComments(input, articleReference)).to.eql(output);
+  });
+  it("For an array containing only one comment object, returns comment with certain keys modified.", () => {
+    const input = [
+      {
+        body:
+          "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+        belongs_to: "They're not exactly dogs, are they?",
+        created_by: "butter_bridge",
+        votes: 16,
+        created_at: 1511354163389
+      }
+    ];
+    const articleReference = { "They're not exactly dogs, are they?": 1 };
+    const output = [
+      {
+        body:
+          "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+        article_id: 1,
+        author: "butter_bridge",
+        votes: 16,
+        created_at: new Date(1511354163389)
+      }
+    ];
+    expect(formatComments(input, articleReference)).to.eql(output);
+  });
+  it("For an array containing several comment objects, returns comment with certain keys modified.", () => {
+    const input = [
+      {
+        body:
+          "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+        belongs_to: "They're not exactly dogs, are they?",
+        created_by: "butter_bridge",
+        votes: 16,
+        created_at: 1511354163389
+      },
+      {
+        body:
+          "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
+        belongs_to: "Living in the shadow of a great man",
+        created_by: "butter_bridge",
+        votes: 14,
+        created_at: 1479818163389
+      }
+    ];
+    const articleReference = {
+      "They're not exactly dogs, are they?": 1,
+      "Living in the shadow of a great man": 2
+    };
+    const output = [
+      {
+        body:
+          "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+        article_id: 1,
+        author: "butter_bridge",
+        votes: 16,
+        created_at: new Date(1511354163389)
+      },
+      {
+        body:
+          "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
+        article_id: 2,
+        author: "butter_bridge",
+        votes: 14,
+        created_at: new Date(1479818163389)
+      }
+    ];
+    expect(formatComments(input, articleReference)).to.eql(output);
+  });
+});

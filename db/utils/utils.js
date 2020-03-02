@@ -16,4 +16,16 @@ exports.makeRefObj = list => {
   return referenceObject;
 };
 
-exports.formatComments = (comments, articleRef) => {};
+exports.formatComments = (comments, articleRef) => {
+  const formattedComments = comments.map(
+    ({ created_by, belongs_to, created_at, ...otherProperties }) => {
+      return {
+        author: created_by,
+        article_id: articleRef[belongs_to],
+        created_at: new Date(created_at),
+        ...otherProperties
+      };
+    }
+  );
+  return formattedComments;
+};
