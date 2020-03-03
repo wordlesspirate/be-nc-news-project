@@ -11,7 +11,7 @@ describe("formatDates()", () => {
     const output = [];
     expect(formatDates(input)).to.eql(output);
   });
-  it("For an array containing only one object, converts timestamp to date.", () => {
+  it("For an array containing only one object, converts timestamp ('created_at') to date.", () => {
     const input = [
       {
         title: "Living in the shadow of a great man",
@@ -34,7 +34,7 @@ describe("formatDates()", () => {
     ];
     expect(formatDates(input)).to.eql(output);
   });
-  it("For an array containing several objects, converts timestamps to date.", () => {
+  it("For an array containing several objects, converts timestamps ('created_at') to date.", () => {
     const input = [
       {
         title: "Living in the shadow of a great man",
@@ -122,7 +122,7 @@ describe("makeRefObj()", () => {
   });
 });
 
-describe("formatComments", () => {
+describe("formatComments()", () => {
   it("If no input is provided, returns an empty array.", () => {
     const input = [];
     const articleReference = {};
@@ -195,5 +195,29 @@ describe("formatComments", () => {
       }
     ];
     expect(formatComments(input, articleReference)).to.eql(output);
+  });
+  it("Original input has not been mutated.", () => {
+    const input = [
+      {
+        body:
+          "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+        belongs_to: "They're not exactly dogs, are they?",
+        created_by: "butter_bridge",
+        votes: 16,
+        created_at: 1511354163389
+      }
+    ];
+    const articleReference = { "They're not exactly dogs, are they?": 1 };
+    formatComments(input, articleReference);
+    expect(input).to.eql([
+      {
+        body:
+          "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+        belongs_to: "They're not exactly dogs, are they?",
+        created_by: "butter_bridge",
+        votes: 16,
+        created_at: 1511354163389
+      }
+    ]);
   });
 });

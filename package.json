@@ -8,7 +8,7 @@
     "seed": "knex seed:run",
     "seed-test": "NODE_ENV=test knex seed:run && npm run query-db",
     "test-utils": "mocha spec/utils.spec.js",
-    "test": "mocha spec/utils.spec.js",
+    "test": "mocha spec/app.spec.js",
     "query-db": "psql -f ./db/query-db.sql > query-output.txt",
     "migrate-make": "knex migrate:make",
     "migrate-latest-test": "NODE_ENV=test knex migrate:latest && npm run query-db",
@@ -27,11 +27,13 @@
   },
   "homepage": "https://github.com/northcoders/be-nc-news#readme",
   "dependencies": {
+    "express": "^4.17.1",
     "knex": "^0.20.10",
     "pg": "^7.18.2"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^7.1.0"
+    "mocha": "^7.1.0",
+    "supertest": "^4.0.2"
   }
 }
