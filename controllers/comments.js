@@ -13,8 +13,8 @@ exports.patchComment = (req, res, next) => {
 exports.deleteCommentById = (req, res, next) => {
   const { comment_id } = req.params;
   removeCommentById(comment_id)
-    .then(comment => {
-      if (!comment_id) {
+    .then(delCount => {
+      if (delCount === 0) {
         return Promise.reject({
           status: 404,
           msg: "Sorry, can't find what you are looking for!"

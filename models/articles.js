@@ -44,11 +44,20 @@ exports.fetchCommentsByArticleId = (
     .orderBy(sort_by, order);
 };
 
-exports.fetchAllArticles = ({ sort_by = "created_at", order = "desc" }) => {
+exports.fetchAllArticles = ({
+  sort_by = "created_at",
+  order = "desc",
+  author,
+  topic
+}) => {
   return knex
     .select("articles.*")
     .count({ comment_count: "comment_id" })
     .from("articles")
+    .modify(query => {
+      if (author) query.where({ author });
+      if (topic) query.where({ topic });
+    })
     .leftJoin("comments", "articles.article_id", "comments.article_id")
     .groupBy("articles.article_id")
     .orderBy(sort_by, order);

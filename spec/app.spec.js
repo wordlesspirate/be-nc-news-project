@@ -115,6 +115,36 @@ describe("app", () => {
               );
             });
         });
+        it("200 // if no sort_by criteria provided, sorts articles by 'created_at' (descending) by default", () => {
+          return request(app)
+            .get("/api/articles")
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              expect(articles).to.be.sortedBy("created_at", {
+                descending: true
+              });
+            });
+        });
+        it("200 // can sort and order by ascending or descending any query containing a valid column name", () => {
+          return request(app)
+            .get("/api/articles?sort_by=article_id&order=asc")
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              expect(articles).to.be.sortedBy("article_id");
+            });
+        });
+        it("200 // can filter data by provided query data", () => {
+          return request(app)
+            .get("/api/articles?topic=cats")
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              expect(
+                articles.every(article => {
+                  article.topic === "cats";
+                })
+              );
+            });
+        });
       });
       describe("INVALID METHODS", () => {
         it("status 405 // sends invalid method error message if wrong method is used on defined path", () => {
@@ -242,7 +272,7 @@ describe("app", () => {
                 );
               });
           });
-          it("200 // given an article_id, comments default sort_by is created at, is ascending order", () => {
+          it("200 // given an article_id, comments default sort_by is created at, is descending order", () => {
             return request(app)
               .get("/api/articles/1/comments")
               .expect(200)
@@ -259,6 +289,16 @@ describe("app", () => {
               .then(({ body: { comments } }) => {
                 expect(comments).to.be.sortedBy("comment_id", {
                   descending: true
+                });
+              });
+          });
+          it("200 // given an article_id, can revert default sort desc to asc via query", () => {
+            return request(app)
+              .get("/api/articles/1/comments?order=asc")
+              .expect(200)
+              .then(({ body: { comments } }) => {
+                expect(comments).to.be.sortedBy("created_at", {
+                  ascending: true
                 });
               });
           });
