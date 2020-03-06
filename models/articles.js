@@ -32,7 +32,7 @@ exports.fetchAllArticles = ({
     .count({ comment_count: "comment_id" })
     .from("articles")
     .modify(query => {
-      if (author) query.where({ author });
+      if (author) query.where("articles.author", author);
       if (topic) query.where({ topic });
     })
     .leftJoin("comments", "articles.article_id", "comments.article_id")

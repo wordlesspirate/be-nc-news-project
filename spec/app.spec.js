@@ -138,7 +138,6 @@ describe("app", () => {
             .get("/api/articles?topic=cats")
             .expect(200)
             .then(({ body: { articles } }) => {
-              console.log({ articles });
               expect(articles.every(article => article.topic === "cats")).to.be
                 .true;
             });
