@@ -133,16 +133,14 @@ describe("app", () => {
               expect(articles).to.be.sortedBy("article_id");
             });
         });
-        it("200 // can filter data by provided query data", () => {
+        it.only("200 // can filter data by provided query data", () => {
           return request(app)
             .get("/api/articles?topic=cats")
             .expect(200)
             .then(({ body: { articles } }) => {
-              expect(
-                articles.every(article => {
-                  article.topic === "cats";
-                })
-              );
+              console.log({ articles });
+              expect(articles.every(article => article.topic === "cats")).to.be
+                .true;
             });
         });
       });
