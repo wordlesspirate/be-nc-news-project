@@ -1,8 +1,6 @@
 const {
   fetchArticleById,
   updateArticle,
-  addComment,
-  fetchCommentsByArticleId,
   fetchAllArticles
 } = require("../models/articles");
 
@@ -32,41 +30,13 @@ exports.patchArticle = (req, res, next) => {
       status: 400,
       msg: "Sorry, bad request!"
     });
-    return;
+  } else {
+    updateArticle(article_id, inc_votes)
+      .then(article => {
+        res.status(200).send({ article });
+      })
+      .catch(next);
   }
-
-  updateArticle(article_id, inc_votes)
-    .then(article => {
-      res.status(200).send({ article });
-    })
-    .catch(next);
-};
-
-exports.postComment = (req, res, next) => {
-  const { article_id } = req.params;
-  const { body, username } = req.body;
-
-  if (!body || !username || Object.keys(req.body).length !== 2) {
-    next({
-      status: 400,
-      msg: "Sorry, bad request!"
-    });
-    return;
-  }
-  addComment(article_id, username, body)
-    .then(comment => {
-      res.status(201).send({ comment });
-    })
-    .catch(next);
-};
-
-exports.getCommentsByArticleId = (req, res, next) => {
-  const { article_id } = req.params;
-  fetchCommentsByArticleId(article_id, req.query)
-    .then(comments => {
-      res.status(200).send({ comments });
-    })
-    .catch(next);
 };
 
 exports.getAllArticles = (req, res, next) => {

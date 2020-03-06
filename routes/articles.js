@@ -2,10 +2,12 @@ const articlesRouter = require("express").Router();
 const {
   getArticleById,
   patchArticle,
-  postComment,
-  getCommentsByArticleId,
   getAllArticles
 } = require("../controllers/articles.js");
+const {
+  postComment,
+  getCommentsByArticleId
+} = require("../controllers/comments");
 const { invalidMethodsErrorHandler } = require("../errors/index");
 
 articlesRouter
