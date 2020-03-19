@@ -5,7 +5,8 @@ const {
   mainRouteError,
   handleCustomErrors,
   handlePsqlErrors,
-  handleServerErrors
+  handleServerErrors,
+  logErrors
 } = require("./errors/index");
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(express.json());
 
 app.use("/api", apiRouter).all("/*", mainRouteError);
 
+// app.use(logErrors);
 app.use(handleCustomErrors);
 app.use(handlePsqlErrors);
 app.use(handleServerErrors);

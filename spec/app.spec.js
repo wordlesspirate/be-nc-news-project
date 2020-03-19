@@ -133,13 +133,57 @@ describe("app", () => {
               expect(articles).to.be.sortedBy("article_id");
             });
         });
-        it.only("200 // can filter data by provided query data", () => {
+        it(" 400 // if column does not exist, yields not found", () => {
+          return request(app)
+            .get("/api/articles?sort_by=not-a-column")
+            .expect(400)
+            .then(({ body: { msg } }) => {
+              expect(msg).to.equal("Sorry, bad request!");
+            });
+        });
+        it("200 // can filter data by provided query data - topic", () => {
           return request(app)
             .get("/api/articles?topic=cats")
             .expect(200)
             .then(({ body: { articles } }) => {
               expect(articles.every(article => article.topic === "cats")).to.be
                 .true;
+            });
+        });
+        it("200 // can filter data by provided query data - author, where author has no articles", () => {
+          return request(app)
+            .get("/api/articles?author=lurker")
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              expect(articles).to.eql([]);
+            });
+        });
+        it("404 // can filter data by provided query data - topic, where topic does not exist", () => {
+          return request(app)
+            .get("/api/topics?topic=not-a-topic")
+            .expect(404)
+            .then(({ body: { msg } }) => {
+              expect(msg).to.eql("Sorry, can't find what you're looking for!");
+            });
+        });
+        it("404 // if author passed to query does not exist, should yield not found", () => {
+          return request(app)
+            .get("/api/articles?author=not-an-author")
+            .expect(404)
+            .then(({ body: { msg } }) => {
+              expect(msg).to.equal(
+                "Sorry, can't find what you're looking for!"
+              );
+            });
+        });
+        it("200 // can filter data by provided query data - author, which has articles", () => {
+          return request(app)
+            .get("/api/articles?author=butter_bridge")
+            .expect(200)
+            .then(({ body: { articles } }) => {
+              expect(
+                articles.every(article => article.author === "butter_bridge")
+              ).to.be.true;
             });
         });
       });
@@ -207,13 +251,31 @@ describe("app", () => {
                 expect(article.votes).to.eql(101);
               });
           });
-          it("status 200// responds with 400 if 'inc_votes' is empty", () => {
+          it("status 200// responds with 200 if 'inc_votes' is empty and just returns the articles as was", () => {
             return request(app)
               .patch("/api/articles/1")
               .send({})
-              .expect(400)
-              .then(({ body: { msg } }) => {
-                expect(msg).to.eql("Sorry, bad request!");
+              .expect(200)
+              .then(({ body: { article } }) => {
+                expect(article).to.be.an("object");
+                expect(article).to.contain.keys(
+                  "article_id",
+                  "title",
+                  "body",
+                  "votes",
+                  "topic",
+                  "author",
+                  "created_at"
+                );
+                expect(article).to.eql({
+                  article_id: 1,
+                  title: "Living in the shadow of a great man",
+                  topic: "mitch",
+                  author: "butter_bridge",
+                  body: "I find this existence challenging",
+                  created_at: "2018-11-15T12:21:54.171Z",
+                  votes: 101
+                });
               });
           });
           it("status 400 // responds with 400 if 'inc_votes' is not a number", () => {
@@ -225,15 +287,15 @@ describe("app", () => {
                 expect(msg).to.eql("Sorry, bad request!");
               });
           });
-          it("status 400 // responds with 400 if properties other than 'inc_votes' are present", () => {
-            return request(app)
-              .patch("/api/articles/1")
-              .send({ inc_votes: 1, name: "this is my vote" })
-              .expect(400)
-              .then(({ body: { msg } }) => {
-                expect(msg).to.eql("Sorry, bad request!");
-              });
-          });
+          // it("status 400 // responds with 400 if properties other than 'inc_votes' are present", () => {
+          //   return request(app)
+          //     .patch("/api/articles/1")
+          //     .send({ inc_votes: 1, name: "this is my vote" })
+          //     .expect(400)
+          //     .then(({ body: { msg } }) => {
+          //       expect(msg).to.eql("Sorry, bad request!");
+          //     });
+          // });
         });
         describe("INVALID METHODS", () => {
           it("status 405 // sends invalid method error message if wrong method is used on defined path", () => {

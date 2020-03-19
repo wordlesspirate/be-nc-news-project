@@ -12,7 +12,7 @@ exports.handleCustomErrors = (err, req, res, next) => {
 };
 
 exports.handlePsqlErrors = (err, req, res, next) => {
-  const psqlBadRequestCodes = ["22P02", "23503"];
+  const psqlBadRequestCodes = ["22P02", "23503", "42703"];
   if (psqlBadRequestCodes.includes(err.code)) {
     res.status(400).send({ msg: "Sorry, bad request!" });
   } else {
@@ -29,3 +29,8 @@ exports.handleServerErrors = (err, req, res, next) => {
 exports.invalidMethodsErrorHandler = (req, res, next) => {
   res.status(405).send({ msg: "Sorry, method not allowed on this path!" });
 };
+
+// exports.logErrors = (err, req, res, next) => {
+//   console.log("--->", err);
+//   next(err);
+// };

@@ -11,10 +11,20 @@ exports.fetchArticleById = article_id => {
     .first();
 };
 
-exports.updateArticle = (article_id, newVote) => {
+// exports.updateArticle = (article_id, newVote) => {
+//   return knex("articles")
+//     .where("articles.article_id", article_id)
+//     .increment("votes", newVote.inc_votes)
+//     .returning("*")
+//     .then(article => {
+//       return article[0];
+//     });
+// };
+
+exports.updateArticle = (article_id, inc_votes) => {
   return knex("articles")
     .where("articles.article_id", article_id)
-    .increment("votes", newVote.inc_votes)
+    .increment("votes", inc_votes)
     .returning("*")
     .then(article => {
       return article[0];
@@ -28,7 +38,14 @@ exports.fetchAllArticles = ({
   topic
 }) => {
   return knex
-    .select("articles.*")
+    .select(
+      "articles.article_id",
+      "articles.title",
+      "articles.votes",
+      "articles.topic",
+      "articles.author",
+      "articles.created_at"
+    )
     .count({ comment_count: "comment_id" })
     .from("articles")
     .modify(query => {
@@ -39,3 +56,9 @@ exports.fetchAllArticles = ({
     .groupBy("articles.article_id")
     .orderBy(sort_by, order);
 };
+
+// select
+//   EXISTS (select 1 from users where username = 'lurker') as author_exists,
+//   articles.*
+// from articles
+// inner join users on  articles.author = users.username and articles.author = 'lurker';
