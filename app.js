@@ -1,4 +1,5 @@
 const express = require("express");
+
 const cors = require("cors");
 
 const apiRouter = require("./routes/api");
@@ -8,7 +9,7 @@ const {
   handleCustomErrors,
   handlePsqlErrors,
   handleServerErrors,
-  logErrors
+  logErrors,
 } = require("./errors/index");
 
 const app = express();
