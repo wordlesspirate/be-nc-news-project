@@ -1,8 +1,9 @@
 const { expect } = require("chai");
+
 const {
   formatDates,
   makeRefObj,
-  formatComments
+  formatComments,
 } = require("../db/utils/utils");
 
 describe("formatDates()", () => {
@@ -11,7 +12,7 @@ describe("formatDates()", () => {
     const output = [];
     expect(formatDates(input)).to.eql(output);
   });
-  it("For an array containing only one object, converts timestamp ('created_at') to date.", () => {
+  it("For an array containing a single object, converts timestamp property ('created_at') to date.", () => {
     const input = [
       {
         title: "Living in the shadow of a great man",
@@ -19,8 +20,8 @@ describe("formatDates()", () => {
         author: "butter_bridge",
         body: "I find this existence challenging",
         created_at: 1542284514171,
-        votes: 100
-      }
+        votes: 100,
+      },
     ];
     const output = [
       {
@@ -29,12 +30,12 @@ describe("formatDates()", () => {
         author: "butter_bridge",
         body: "I find this existence challenging",
         created_at: new Date(1542284514171),
-        votes: 100
-      }
+        votes: 100,
+      },
     ];
     expect(formatDates(input)).to.eql(output);
   });
-  it("For an array containing several objects, converts timestamps ('created_at') to date.", () => {
+  it("For an array containing several objects, converts timestamp property ('created_at') to date.", () => {
     const input = [
       {
         title: "Living in the shadow of a great man",
@@ -42,15 +43,15 @@ describe("formatDates()", () => {
         author: "butter_bridge",
         body: "I find this existence challenging",
         created_at: 1542284514171,
-        votes: 100
+        votes: 100,
       },
       {
         title: "Eight pug gifs that remind me of mitch",
         topic: "mitch",
         author: "icellusedkars",
         body: "some gifs",
-        created_at: 1289996514171
-      }
+        created_at: 1289996514171,
+      },
     ];
     const output = [
       {
@@ -59,15 +60,15 @@ describe("formatDates()", () => {
         author: "butter_bridge",
         body: "I find this existence challenging",
         created_at: new Date(1542284514171),
-        votes: 100
+        votes: 100,
       },
       {
         title: "Eight pug gifs that remind me of mitch",
         topic: "mitch",
         author: "icellusedkars",
         body: "some gifs",
-        created_at: new Date(1289996514171)
-      }
+        created_at: new Date(1289996514171),
+      },
     ];
     expect(formatDates(input)).to.eql(output);
   });
@@ -79,8 +80,8 @@ describe("formatDates()", () => {
         author: "butter_bridge",
         body: "I find this existence challenging",
         created_at: 1542284514171,
-        votes: 100
-      }
+        votes: 100,
+      },
     ];
     formatDates(input);
     expect(input).to.eql([
@@ -90,8 +91,8 @@ describe("formatDates()", () => {
         author: "butter_bridge",
         body: "I find this existence challenging",
         created_at: 1542284514171,
-        votes: 100
-      }
+        votes: 100,
+      },
     ]);
   });
 });
@@ -102,7 +103,7 @@ describe("makeRefObj()", () => {
     const output = {};
     expect(makeRefObj(input)).to.eql(output);
   });
-  it("For an array containing only one object, creates a reference object containing one reference.", () => {
+  it("For an array containing a single object, creates a reference object containing one reference.", () => {
     const input = [{ article_id: 1, title: "A" }];
     const output = { A: 1 };
     expect(makeRefObj(input)).to.eql(output);
@@ -110,7 +111,7 @@ describe("makeRefObj()", () => {
   it("For an array containing several objects, creates a reference object containing several references.", () => {
     const input = [
       { article_id: 1, title: "A" },
-      { article_id: 2, title: "B" }
+      { article_id: 2, title: "B" },
     ];
     const output = { A: 1, B: 2 };
     expect(makeRefObj(input)).to.eql(output);
@@ -129,7 +130,7 @@ describe("formatComments()", () => {
     const output = [];
     expect(formatComments(input, articleReference)).to.eql(output);
   });
-  it("For an array containing only one comment object, returns comment with certain keys modified.", () => {
+  it("For an array containing a single comment object, returns comment with certain keys ('created_at', 'belongs_to' and 'article_id') modified.", () => {
     const input = [
       {
         body:
@@ -137,8 +138,8 @@ describe("formatComments()", () => {
         belongs_to: "They're not exactly dogs, are they?",
         created_by: "butter_bridge",
         votes: 16,
-        created_at: 1511354163389
-      }
+        created_at: 1511354163389,
+      },
     ];
     const articleReference = { "They're not exactly dogs, are they?": 1 };
     const output = [
@@ -148,12 +149,12 @@ describe("formatComments()", () => {
         article_id: 1,
         author: "butter_bridge",
         votes: 16,
-        created_at: new Date(1511354163389)
-      }
+        created_at: new Date(1511354163389),
+      },
     ];
     expect(formatComments(input, articleReference)).to.eql(output);
   });
-  it("For an array containing several comment objects, returns comment with certain keys modified.", () => {
+  it("For an array containing several comment objects, returns comments with certain keys ('created_at', 'belongs_to' and 'article_id') modified.", () => {
     const input = [
       {
         body:
@@ -161,7 +162,7 @@ describe("formatComments()", () => {
         belongs_to: "They're not exactly dogs, are they?",
         created_by: "butter_bridge",
         votes: 16,
-        created_at: 1511354163389
+        created_at: 1511354163389,
       },
       {
         body:
@@ -169,12 +170,12 @@ describe("formatComments()", () => {
         belongs_to: "Living in the shadow of a great man",
         created_by: "butter_bridge",
         votes: 14,
-        created_at: 1479818163389
-      }
+        created_at: 1479818163389,
+      },
     ];
     const articleReference = {
       "They're not exactly dogs, are they?": 1,
-      "Living in the shadow of a great man": 2
+      "Living in the shadow of a great man": 2,
     };
     const output = [
       {
@@ -183,7 +184,7 @@ describe("formatComments()", () => {
         article_id: 1,
         author: "butter_bridge",
         votes: 16,
-        created_at: new Date(1511354163389)
+        created_at: new Date(1511354163389),
       },
       {
         body:
@@ -191,8 +192,8 @@ describe("formatComments()", () => {
         article_id: 2,
         author: "butter_bridge",
         votes: 14,
-        created_at: new Date(1479818163389)
-      }
+        created_at: new Date(1479818163389),
+      },
     ];
     expect(formatComments(input, articleReference)).to.eql(output);
   });
@@ -204,8 +205,8 @@ describe("formatComments()", () => {
         belongs_to: "They're not exactly dogs, are they?",
         created_by: "butter_bridge",
         votes: 16,
-        created_at: 1511354163389
-      }
+        created_at: 1511354163389,
+      },
     ];
     const articleReference = { "They're not exactly dogs, are they?": 1 };
     formatComments(input, articleReference);
@@ -216,8 +217,8 @@ describe("formatComments()", () => {
         belongs_to: "They're not exactly dogs, are they?",
         created_by: "butter_bridge",
         votes: 16,
-        created_at: 1511354163389
-      }
+        created_at: 1511354163389,
+      },
     ]);
   });
 });
