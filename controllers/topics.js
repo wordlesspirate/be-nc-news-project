@@ -1,10 +1,8 @@
-const { fetchTopics, checkTopicExists } = require("../models/topics");
-const { fetchAllArticles } = require("../models/articles");
+const { fetchAllTopics } = require("../models/topics");
 
-exports.getTopics = (req, res, next) => {
-  fetchTopics()
+exports.getAllTopics = (req, res, next) => {
+  fetchAllTopics()
     .then((topics) => {
-      // console.log(topics);
       res.status(200).send({ topics });
     })
     .catch(next);

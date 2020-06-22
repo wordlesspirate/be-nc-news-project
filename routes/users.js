@@ -1,5 +1,7 @@
 const usersRouter = require("express").Router();
+
 const { getUserByUsername } = require("../controllers/users.js");
+
 const { invalidMethodsErrorHandler } = require("../errors/index");
 
 usersRouter

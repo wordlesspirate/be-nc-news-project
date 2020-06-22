@@ -6,7 +6,7 @@ exports.handleCustomErrors = (err, req, res, next) => {
     res.status(err.status).send({ msg: err.msg });
   } else if (err.status)
     res.status(err.status).send({
-      msg: "Sorry, can't find what you are looking for!"
+      msg: "Sorry, can't find what you are looking for!",
     });
   else next(err);
 };
@@ -22,7 +22,7 @@ exports.handlePsqlErrors = (err, req, res, next) => {
 
 exports.handleServerErrors = (err, req, res, next) => {
   res.status(500).send({
-    msg: "Sorry, Internal Server Error!"
+    msg: "Sorry, Internal Server Error!",
   });
 };
 

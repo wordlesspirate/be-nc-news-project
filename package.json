@@ -8,7 +8,7 @@
     "seed": "knex seed:run && npm run query-db",
     "seed-test": "NODE_ENV=test knex seed:run && npm run query-db",
     "test-utils": "mocha spec/utils.spec.js",
-    "test": "mocha spec/app.spec.js --watch",
+    "test": "mocha spec/app.spec.js",
     "query-db": "psql -h localhost -f ./db/query-db.sql > query-output.txt",
     "migrate-make": "knex migrate:make",
     "migrate-latest-test": "NODE_ENV=test knex migrate:latest && npm run query-db",
