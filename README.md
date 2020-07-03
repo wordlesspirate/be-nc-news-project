@@ -1,6 +1,6 @@
 # NC News Project
 
-This is a project completed as part of the review process of Northcoder's Backend curriculum.
+This is a project completed as part of the review process of Northcoder's backend curriculum.
 
 ## Step 1 - Setting up your own copy of the repository:
 
@@ -22,7 +22,7 @@ Here is a list of some of the tools you will need to install:
 - `npm i -D mocha`
 - `npm i -D supertest`
 
-(Alternatively, run `npm i` in your terminal to install all necessary tools through your `package.json` file.)
+(Alternatively, run `npm i` in your terminal to install all necessary tools through the `package.json` file.)
 
 ## Step 3 - Running the tests
 

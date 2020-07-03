@@ -1,109 +1,60 @@
-// const {
-//   fetchArticleById,
-//   updateArticle,
-//   fetchAllArticles,
-//   fetchUserArticles,
-// } = require("../models/articles");
+const {
+  fetchArticleById,
+  updateArticle,
+  addComment,
+  fetchCommentsByArticleId,
+  fetchAllArticles,
+} = require("../models/articles");
 
-// const { checkUsernameExists, fetchUserByUsername } = require("../models/users");
+exports.getArticleById = (req, res, next) => {
+  const { article_id } = req.params;
 
-// exports.getArticleById = (req, res, next) => {
-//   const { article_id } = req.params;
-//   fetchArticleById(article_id)
-//     .then((article) => {
-//       if (article) {
-//         res.status(200).send({ article });
-//       } else {
-//         return Promise.reject({
-//           status: 404,
-//           msg: "Sorry, can't find what you are looking for!",
-//         });
-//       }
-//     })
-//     .catch(next);
-// };
+  fetchArticleById(article_id)
+    .then((article) => {
+      res.status(200).send({ article });
+    })
+    .catch(next);
+};
 
-// // exports.patchArticle = (req, res, next) => {
-// //   const { article_id } = req.params;
-// //   const { inc_votes } = req.body;
+exports.patchArticle = (req, res, next) => {
+  const { article_id } = req.params;
+  const { inc_votes } = req.body;
 
-// //   if (isNaN(inc_votes) || Object.keys(req.body).length !== 1) {
-// //     next({
-// //       status: 400,
-// //       msg: "Sorry, bad request!"
-// //     });
-// //   } else {
-// //     updateArticle(article_id, inc_votes)
-// //       .then(article => {
-// //         res.status(200).send({ article });
-// //       })
-// //       .catch(next);
-// //   }
-// // };
+  updateArticle(article_id, inc_votes)
+    .then((article) => {
+      res.status(200).send({ article });
+    })
+    .catch(next);
+};
 
-// //working on this one
-// exports.patchArticle = (req, res, next) => {
-//   const { article_id } = req.params;
-//   const { inc_votes } = req.body;
+exports.postComment = (req, res, next) => {
+  const { article_id } = req.params;
+  const { body, username } = req.body;
 
-//   if (isNaN(inc_votes) || Object.keys(req.body).length !== 1) {
-//     return Promise.reject({
-//       status: 400,
-//       msg: "Sorry, bad request!",
-//     });
-//   } else {
-//     if (isNaN(inc_votes)) {
-//       return Promise.reject({
-//         status: 400,
-//         msg: "Sorry, bad request!",
-//       });
-//     } else {
-//       updateArticle(article_id, inc_votes)
-//         .then((article) => {
-//           res.status(200).send({ article });
-//         })
-//         .catch(next);
-//     }
-//   }
-// };
+  addComment(article_id, username, body)
+    .then((comment) => {
+      res.status(201).send({ comment });
+    })
+    .catch(next);
+};
 
-// exports.getAllArticles = (req, res, next) => {
-//   const { author } = req.query;
+exports.getCommentsByArticleId = (req, res, next) => {
+  const { article_id } = req.params;
+  const { sort_by, order } = req.query;
 
-//   if (author) {
-//     Promise.all([
-//       checkUsernameExists(author),
-//       fetchAllArticles(req.query),
-//     ]).then(([user, articles]) => {
-//       res.status(200).send({ articles });
-//     });
-//     // .catch(next);
-//   } else {
-//     fetchAllArticles(req.query)
-//       .then((articles) => {
-//         // console.log(articles);
-//         res.status(200).send({ articles });
-//       })
-//       .catch(next);
-//   }
-// };
+  return fetchCommentsByArticleId(article_id, sort_by, order)
+    .then((comments) => {
+      res.status(200).send({ comments });
+    })
+    .catch(next);
+};
 
-// // exports.getArticlesByAuthor = (req, res, next) => {
-// //   const { author } = req.query;
-// //   Promise.all([checkUsernameExists(author), fetchAllArticles(req.query)])
-// //     .then((result) => {
-// //       console.log(result, "<---");
-// //       res.status(200).send({ result });
-// //     })
-// //     .catch(next);
-// // };
+exports.getAllArticles = (req, res, next) => {
+  const { author, topic, sort_by, order, page, limit } = req.query;
 
-// exports.getUserArticles = (req, res, next) => {
-//   const { username } = req.params;
-//   fetchUserArticles(username)
-//     .then((userArticles) => {
-//       // console.log(userArticles);
-//       res.status(200).send({ userArticles });
-//     })
-//     .catch(next);
-// };
+  return fetchAllArticles(author, topic, sort_by, order, page, limit)
+    .then((articles) => {
+      res.status(200).send({ articles });
+    })
+    .catch(next);
+};
