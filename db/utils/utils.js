@@ -1,11 +1,11 @@
-exports.formatDates = list => {
+exports.formatDates = (list) => {
   const formattedDate = list.map(({ created_at, ...otherProperties }) => {
     return { created_at: new Date(created_at), ...otherProperties };
   });
   return formattedDate;
 };
 
-exports.makeRefObj = list => {
+exports.makeRefObj = (list) => {
   const referenceObject = list.reduce(
     (referenceElements, { title, article_id }) => {
       referenceElements[title] = article_id;
@@ -23,7 +23,7 @@ exports.formatComments = (comments, articleRef) => {
         author: created_by,
         article_id: articleRef[belongs_to],
         created_at: new Date(created_at),
-        ...otherProperties
+        ...otherProperties,
       };
     }
   );

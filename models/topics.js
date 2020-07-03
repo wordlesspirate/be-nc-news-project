@@ -1,19 +1,24 @@
 const knex = require("../db/connection");
+const { withPagination } = require("../db/queries");
+const { isNumber, isStringNotEmpty } = require("../validations/validations");
+const { BAD_REQUEST, NOT_FOUND } = require("../errors/index").HTTP_ERRORS;
 
-exports.fetchTopics = () => {
-  return knex.select("*").from("topics");
+exports.fetchTopic = (topic) => {
+  if (!isStringNotEmpty(topic)) {
+    return Promise.reject(BAD_REQUEST);
+  }
+  return knex
+    .select("*")
+    .from("topics")
+    .where("slug", topic)
+    .first()
+    .then((topic) => {
+      if (!topic) return Promise.reject(NOT_FOUND)
+      return topic
+    });
 };
 
-//just added
-exports.checkTopicExists = topic => {
-  return knex("topics")
-    .select("*")
-    .where("slug", topic)
-    .then(([topic]) => {
-      if (!topic)
-        return Promise.reject({
-          status: 404,
-          msg: "Sorry, can't find what you're looking for!"
-        });
-    });
+exports.fetchAllTopics = (limit = 10, page = 1) => {
+  if (!isNumber(limit) || !isNumber(page)) return Promise.reject(BAD_REQUEST);
+  return knex.select("*").from("topics").modify(withPagination, limit, page).then((topics) => topics)
 };

@@ -4,12 +4,12 @@
   "description": "bc-nc-news",
   "main": "index.js",
   "scripts": {
-    "setup-dbs": "psql -f ./db/setup.sql",
+    "setup-dbs": "psql -h localhost -f ./db/setup.sql",
     "seed": "knex seed:run && npm run query-db",
     "seed-test": "NODE_ENV=test knex seed:run && npm run query-db",
     "test-utils": "mocha spec/utils.spec.js",
     "test": "mocha spec/app.spec.js",
-    "query-db": "psql -f ./db/query-db.sql > query-output.txt",
+    "query-db": "psql -h localhost -f ./db/query-db.sql > query-output.txt",
     "migrate-make": "knex migrate:make",
     "migrate-latest-test": "NODE_ENV=test knex migrate:latest && npm run query-db",
     "migrate-latest": "knex migrate:latest && npm run query-db",
@@ -19,7 +19,8 @@
     "seed:prod": "NODE_ENV=production DB_URL=$(heroku config:get DATABASE_URL) knex seed:run",
     "migrate-latest:prod": "NODE_ENV=production DB_URL=$(heroku config:get DATABASE_URL) knex migrate:latest",
     "migrate-rollback:prod": "NODE_ENV=production DB_URL=$(heroku config:get DATABASE_URL) knex migrate:rollback",
-    "start": "node listen.js"
+    "start": "node listen.js",
+    "postgresql": "docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=password postgres:11"
   },
   "repository": {
     "type": "git",
@@ -33,10 +34,12 @@
   },
   "homepage": "https://github.com/northcoders/be-nc-news#readme",
   "dependencies": {
+    "chai-json": "^1.0.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "knex": "^0.20.10",
-    "pg": "^7.18.2"
+    "pg": "^7.18.2",
+    "safe-regex": "^2.1.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",
